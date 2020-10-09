@@ -1,0 +1,164 @@
+{% extends "ticket/base.html" %}
+{% load static %}
+
+{% block title %}Ticket List: {{ list_slug }}{% endblock %}
+
+{% block extrahead %}
+<link href="{% static 'ticket/css/jquery-confirm.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+  <button class="btn btn-primary" id="AddTaskButton" type="button"
+    data-toggle="collapse" data-target="#AddEditTask">Add Task</button>
+
+  {# Task edit / new task form #}
+  <div id="AddEditTask" class="collapse">
+    {% include 'ticket/include/task_edit.html' %}
+  </div>
+  <hr />
+
+  {% if tasks %}
+    {% if ticket_slug == "mine" %}
+      {% if user.is_staff %}
+        {% if user.is_superuser %}
+          <h1>All {{ view_completed|yesno:"Completed tasks, Tasks" }} from all companies</h1>
+        {% else %}
+          <h1>Tasks assigned to me (of all companies)</h1>
+        {% endif %}
+      {% else %}
+        <h1>Tasks raised by my company</h1>
+      {% endif %}
+    {% else %}
+      <h1>{{ view_completed|yesno:"Completed tasks, Tasks" }} of {{ list_slug }}</h1>
+    {% endif %}
+
+    <table class="table" id="tasktable">
+      <tr class="nodrop">
+        <th>Task</th>
+        <th>Created</th>
+        <!-- <th>Due on</th> -->
+        <th>Owner</th>
+        <th>Assigned To</th>
+        {% if user.is_staff %}
+          <th>Mark</th>
+          <th>Credits</th>
+        {% endif %}
+      </tr>
+
+      {% for task in tasks %}
+        <tr id="{{ task.id }}">
+          <td>
+              <a href="{% url 'ticket:task_detail' task.id %}">{{ task.title|truncatewords:10 }}</a>
+          </td>
+          <td>
+              {{ task.created_date|date:"d/m/Y" }}
+          </td>
+          <!-- <td>
+            <span {% if task.overdue_status %}class="overdue"{% endif %}>
+              {{ task.due_date|date:"m/d/Y" }}
+            </span>
+          </td> -->
+          <td>
+            {{ task.created_by }}
+          </td>
+          <td>
+            {% if task.assigned_to %}{{ task.assigned_to }}{% else %}Anyone{% endif %}
+          </td>
+          {% if user.is_staff %}
+            <td>
+              <form id="fm_toggle_done_{{task.id}}" method="post" action="{% url 'ticket:task_toggle_done' task.id %}" role="form">
+                {% csrf_token %}
+                  {% if task_list.subscription_based or view_completed %}
+                    <button class="btn btn-info btn-sm" type="submit" name="toggle_done">
+                      {% if view_completed %}
+                        Un-Done
+                      {% else %}
+                        Done
+                      {% endif %}
+                    </button>
+                  {% else %}
+                    <button id="id_toggle_done_{{task.id}}" class="btn btn-info btn-sm btn_toggle_done" data-id="{{task.id}}" type="button" name="toggle_done">
+                      Done
+                    </button>
+                  {% endif %}
+                <input type="hidden" name="credits_comsumed" value="0" id="id_credits_comsumed_{{task.id}}">
+              </form>
+            </td>
+            <td>
+              {% if task_list.subscription_based %}
+                N/A
+              {% else %}
+                {{ task.credits_comsumed }}
+              {% endif %}
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <h4>No tasks on this list yet</h4>
+  {% endif %}
+  {% if ticket_slug != "mine" %}
+    {% include 'ticket/include/toggle_completed.html' %}
+  {% elif user.is_superuser %}
+    {% include 'ticket/include/toggle_mine_completed.html' %}
+  {% endif %}
+  
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'ticket/js/jquery-confirm.min.js' %}" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".btn_toggle_done").confirm({
+        title: 'Earning!',
+        content: '' +
+        '<form action="" class="formName">' +
+        '<div class="form-group">' +
+        '<label>Enter credits used</label>' +
+        '<input type="text" placeholder="credits" class="credits form-control" required />' +
+        '</div>' +
+        '</form>',
+        theme: 'bootstrap',
+        backgroundDismiss: false,
+        buttons: {
+            formSubmit: {
+                text: 'Submit',
+                btnClass: 'btn-blue',
+                action: function () {
+                    var credits = this.$content.find('.credits').val();
+                    if (!credits) {
+                        $.alert('provide a valid credits');
+                        return false;
+                    }
+                    // console.log(this.$target);
+                    let id = this.$target[0].dataset["id"];
+                    $("#id_credits_comsumed_" + id).val(credits);
+                    $("#fm_toggle_done_" + id).submit();
+                }
+            },
+            cancel: function () {
+                //close
+            },
+        },
+        onContentReady: function () {
+            // bind to events
+            var jc = this;
+            this.$content.find('form').on('submit', function (e) {
+                // if the user submits the form by pressing enter in the field.
+                e.preventDefault();
+                jc.$$formSubmit.trigger('click'); // reference the button and click it
+            });
+        }
+      });
+    });
+    // When adding a task, change the text of the Add Task button
+    function handleClick()
+    {
+      // console.log(this.innerHTML);
+      this.innerHTML = (this.innerHTML == 'Add Task' ? 'Cancel' : 'Add Task');
+    }
+    document.getElementById('AddTaskButton').onclick = handleClick;
+  </script>
+{% endblock extra_js %}

@@ -1,0 +1,30 @@
+{% extends "ticket/base.html" %}
+
+{% block title %}Search results{% endblock %}
+{% block content_title %}<h2 class="page_title">Search</h2>{% endblock %}
+
+{% block content %}
+  {% if found_tasks %}
+  <h2>{{found_tasks.count}} search results for term: "{{ query_string }}"</h2>
+  <div class="post_list">
+    {% for f in found_tasks %}
+    <p>
+      <h3><a href="{% url 'ticket:task_detail' f.id %}">{{ f.title }}</a></h3>
+      <span class="minor">
+        {% if user.is_staff %}
+          In list:
+          <a href="{% url 'ticket:list_detail' f.task_list.id %}">
+            {{ f.task_list.name }}
+          </a>
+          <br /> 
+        {% endif %}
+        Assigned to: {% if f.assigned_to %}{{ f.assigned_to }}{% else %}Anyone{% endif %}
+        <br /> Complete: {{ f.completed|yesno:"Yes,No" }}
+      </span>
+    </p>
+    {% endfor %}
+  </div>
+  {% else %}
+    <h2> No tasks found.</h2>
+  {% endif %}
+{% endblock %}

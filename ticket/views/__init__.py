@@ -1,0 +1,9 @@
+from ticket.views.delete_task import delete_task  # noqa: F401
+from ticket.views.external_add import external_add  # noqa: F401
+from ticket.views.my_list_detail import my_list_detail  # noqa: F401
+from ticket.views.list_detail import list_detail  # noqa: F401
+from ticket.views.list_lists import list_lists  # noqa: F401
+from ticket.views.remove_attachment import remove_attachment  # noqa: F401
+from ticket.views.search import search  # noqa: F401
+from ticket.views.task_detail import task_detail  # noqa: F401
+from ticket.views.toggle_done import toggle_done  # noqa: F401

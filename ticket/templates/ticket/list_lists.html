@@ -1,0 +1,20 @@
+{% extends "ticket/base.html" %}
+
+{% block title %}{{ list_title }} Ticket Lists{% endblock %}
+
+{% block content %}
+  <h1>Ticket Lists</h1>
+
+  <p>{{ task_count }} tasks in {{ list_count }} company{{ list_count|pluralize }}</p>
+
+  <ul class="list-group mb-4">
+    {% for list in lists %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <a href="{% url 'ticket:list_detail' list.id %}">{{ list.name }}</a>
+      <span class="badge badge-info badge-pill">{% if list.subscription_based %}Subscribed{% else %}Credits Left: {{ list.credits }}{% endif %}</span>
+      <span class="badge badge-primary badge-pill">Opened Tasks: {{ list.task_set.count }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

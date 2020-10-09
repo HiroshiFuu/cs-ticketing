@@ -1,0 +1,6 @@
+
+	{% if view_completed %}
+	  <a href="{% url 'ticket:mine' %}" class="btn btn-sm btn-warning">View incomplete tasks</a>
+	{% else %}
+	  <a href="{% url 'ticket:mine_completed' %}" class="btn btn-sm btn-warning">View completed tasks</a>
+	{% endif %}
