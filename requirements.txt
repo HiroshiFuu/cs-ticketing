@@ -3,3 +3,4 @@ gunicorn
 whitenoise
 Werkzeug
 django-extensions
+bleach
