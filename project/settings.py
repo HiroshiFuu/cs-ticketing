@@ -37,7 +37,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project.urls'
 LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = 'ticket:lists'
+LOGIN_REDIRECT_URL = 'ticket:mine'
 LOGOUT_REDIRECT_URL = 'login'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True

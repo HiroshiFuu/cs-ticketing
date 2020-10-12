@@ -7,11 +7,12 @@ from ticket.features import HAS_TASK_MERGE
 app_name = 'ticket'
 
 urlpatterns = [
-    path('', views.list_lists, name='lists'),
+    path('lists', views.list_lists, name='lists'),
     # Allow users to post tasks from outside cs-support-ticket (e.g. for filing tickets - see docs)
     path('add/', views.external_add, name='external_add'),
     # View tickets created by external users
     # path('external_mine/', views.list_detail, {'list_slug': 'mine'}, name='external_mine'),
+    path('', views.my_list_detail),
     path('mine/', views.my_list_detail, name='mine'),
     path(
         'mine/completed',
