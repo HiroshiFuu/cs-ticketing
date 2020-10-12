@@ -5,7 +5,7 @@ SECRET_KEY = 'za#q^j+$6frru&3*)b0yl=#9wmue%rf38akqux(fjvl-&zy@_l'
 
 DEBUG = True
 
-RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8080'
+RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
 
 DATABASES = {
     'default': {
