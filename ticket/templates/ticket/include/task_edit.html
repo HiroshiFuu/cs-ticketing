@@ -16,11 +16,11 @@
         Describe the task or bug. Provide steps to reproduce the issue.
       </small>
     </div>
-    {% for field in form %}
+    <!-- {% for field in form %}
       <div class="fieldWrapper">
           {{ field.label_tag }}{{ field.errors }}
       </div>
-    {% endfor %}
+    {% endfor %} -->
 
     {% if user.is_superuser %}
       <div class="form-group">
