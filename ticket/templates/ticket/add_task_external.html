@@ -42,13 +42,13 @@
 
         {% if user.is_staff %}
           <div class="form-group">
-            <label for="id_assigned_to">For Company</label>
+            <label for="task_list">For Company</label>
             {# See ticket.forms.AddEditTaskForm #}
             {{ form.task_list }}
           </div>
         {% endif %}
 
-        <input type="hidden" id="id_priority" name="priority" value="50">
+        <input type="hidden" id="id_priority" name="priority" value="99">
         <p><input type="submit" class="btn btn-primary" name="add_task" value="Submit"></p>
     </form>
 

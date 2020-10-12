@@ -46,20 +46,18 @@ def my_list_detail(request, view_completed=False) -> HttpResponse:
     # ######################
     #  Add New Task Form
     # ######################
-
-    if request.POST.getlist('add_edit_task'):
-        form = AddEditTaskForm(
-            request.user,
-            request.POST,
-            initial={'priority': 999, 'task_list': task_list},
-        )
-
+    if not request.POST.getlist('add_edit_task'):
+        form = AddEditTaskForm(request.user, initial={'priority': 999, 'task_list': task_list})
+    else:
+        form = AddEditTaskForm(request.user, request.POST)
         if form.is_valid():
             new_task = form.save(commit=False)
             new_task.note = bleach.clean(form.cleaned_data['note'], strip=True)
             new_task.title = bleach.clean(form.cleaned_data['title'], strip=True)
             new_task.save()
             return redirect(request.path)
+        else:
+            messages.error(request, "Task creation something went wrong!!!")
 
     context = {
         'list_slug': list_slug,

@@ -16,10 +16,15 @@
         Describe the task or bug. Provide steps to reproduce the issue.
       </small>
     </div>
+    {% for field in form %}
+      <div class="fieldWrapper">
+          {{ field.label_tag }}{{ field.errors }}
+      </div>
+    {% endfor %}
 
     {% if user.is_superuser %}
       <div class="form-group">
-        <label for="id_assigned_to">For Company</label>
+        <label for="task_list">For Company</label>
         {# See ticket.forms.AddEditTaskForm #}
         {{ form.task_list }}
       </div>
@@ -42,7 +47,7 @@
         </div>
       </div>
     {% else %}
-      <input type="hidden" name="task_list" value="{{ form.task_list.value }}" id="id_task_list">
+      <input type="hidden" name="task_list" value="{% if form.task_list.value %}{{ form.task_list.value }}{% endif %}" id="id_task_list">
       <input type="hidden" name="assigned_to" class="form-control" id="id_assigned_to" value="{% if form.assigned_to.value %}{{ form.assigned_to.value }}{% endif %}">
     {% endif %}
 

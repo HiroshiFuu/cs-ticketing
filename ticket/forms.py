@@ -25,14 +25,37 @@ class AddEditTaskForm(ModelForm):
                 'name': 'assigned_to',
             }
             self.fields['assigned_to'].required = False
+            companies = Company.objects.all()
+            self.fields['task_list'].queryset = companies
+            self.fields['task_list'].label_from_instance = lambda obj: '%s (%s %s)' % (
+                obj.name,
+                obj.credits,
+                obj.subscription_based
+            )
+            self.fields['task_list'].widget.attrs = {
+                'id': 'id_task_list',
+                'class': 'custom-select mb-3',
+                'name': 'task_list',
+            }
+            self.fields['task_list'].required = True
+        print(self.initial)
 
     title = forms.CharField(widget=forms.widgets.TextInput())
+    note = forms.CharField(widget=forms.widgets.Textarea(), label='Problem Description', required=False)
     # due_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-    note = forms.CharField(widget=forms.widgets.TextInput(), required=False)
 
     class Meta:
         model = Task
-        exclude = ['created_by', 'modified_by', 'created_at', 'modified_at']
+        exclude = (
+            'created_date',
+            'due_date',
+            'created_by',
+            'modified_by',
+            'created_at',
+            'modified_at',
+            'completed',
+            'completed_date',
+        )
 
 
 class AddExternalTaskForm(ModelForm):
