@@ -4,3 +4,4 @@ whitenoise
 Werkzeug
 django-extensions
 bleach
+django-environ
