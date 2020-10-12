@@ -5,6 +5,8 @@ SECRET_KEY = 'za#q^j+$6frru&3*)b0yl=#9wmue%rf38akqux(fjvl-&zy@_l'
 
 DEBUG = True
 
+ALLOWED_HOSTS = ['118.201.195.130']
+
 RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8000'
 
 DATABASES = {
