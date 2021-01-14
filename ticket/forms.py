@@ -38,7 +38,7 @@ class AddEditTaskForm(ModelForm):
                 'name': 'task_list',
             }
             self.fields['task_list'].required = True
-        print(self.initial)
+        # print('AddEditTaskForm', self.initial)
 
     title = forms.CharField(widget=forms.widgets.TextInput())
     note = forms.CharField(widget=forms.widgets.Textarea(), label='Problem Description', required=False)
