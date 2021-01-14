@@ -7,7 +7,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['118.201.195.130']
 
-RUNSERVERPLUS_SERVER_ADDRESS_PORT = '0.0.0.0:8080'
+RUNSERVERPLUS_SERVER_ADDRESS_PORT = '118.201.195.130:8080'
 
 DATABASES = {
     'default': {
@@ -33,7 +33,8 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+            'datefmt' : '%Y/%b/%d %H:%M:%S'
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
@@ -50,8 +51,11 @@ LOGGING = {
         },
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': '/home/it/cs-ticketing/debug.log',
+            'backupCount': 30,
+            'when': 'midnight',
+            'formatter': 'verbose'
         },
     },
     'loggers': {
